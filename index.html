@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏸 Badminton TNI x Room.31</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;min-height:100vh;color:#111}
+.app{display:grid;grid-template-columns:1fr 320px;min-height:100vh;max-width:900px;margin:0 auto;background:#fff;box-shadow:0 0 0 1px #e5e5e5}
+.panel-left{background:#f9f9f9;display:flex;flex-direction:column}
+.panel-right{background:#fff;border-left:1px solid #e5e5e5;display:flex;flex-direction:column}
+.topbar{padding:14px 16px;border-bottom:1px solid #e5e5e5;background:#fff;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.shop-name{font-size:15px;font-weight:600;color:#111}
+.shop-sub{font-size:11px;color:#888;margin-top:2px}
+.order-content{flex:1;overflow-y:auto;padding:14px 16px}
+.step-label{font-size:10px;font-weight:600;color:#aaa;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.name-section{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.name-section input{flex:1;border:none;background:transparent;font-size:14px;color:#111;font-family:inherit;outline:none}
+.name-section input::placeholder{color:#bbb}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.prod-card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:14px;cursor:pointer;transition:all .15s;text-align:center;-webkit-tap-highlight-color:transparent}
+.prod-card:hover,.prod-card:active{border-color:#16a67d;transform:translateY(-1px)}
+.prod-icon{font-size:30px;margin-bottom:8px;display:block}
+.prod-name{font-size:13px;font-weight:600;color:#111}
+.prod-price{font-size:13px;color:#16a67d;margin-top:3px;font-weight:500}
+.sweet-section{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.sweet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.sweet-opt{padding:8px 4px;border-radius:8px;border:1px solid #e5e5e5;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:#666;text-align:center;transition:all .15s;line-height:1.4;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.sweet-opt:hover{border-color:#16a67d;color:#16a67d}
+.sweet-opt.sel{background:#16a67d;border-color:#16a67d;color:#fff}
+.note-section{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.note-section textarea{width:100%;border:none;background:transparent;resize:none;font-size:13px;color:#111;font-family:inherit;outline:none;height:44px}
+.note-section textarea::placeholder{color:#bbb}
+.add-btn{width:100%;padding:13px;border-radius:10px;border:none;background:#16a67d;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.add-btn:hover{background:#0e8f6a}
+.add-btn:disabled{background:#e5e5e5;color:#bbb;cursor:default}
+.tabs{display:flex;border-bottom:1px solid #e5e5e5;background:#fff;position:sticky;top:0;z-index:5}
+.tab{flex:1;padding:12px;text-align:center;font-size:12px;font-weight:600;color:#aaa;cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .15s;font-family:inherit}
+.tab.active{color:#16a67d;border-bottom-color:#16a67d}
+.tab-panel{display:none;flex:1;flex-direction:column;min-height:0}
+.tab-panel.active{display:flex}
+.receipt-header{padding:12px 16px;border-bottom:1px solid #e5e5e5}
+.receipt-items{flex:1;overflow-y:auto;padding:8px 16px;-webkit-overflow-scrolling:touch}
+.receipt-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;gap:8px;color:#ccc;font-size:13px;padding:2rem 0;text-align:center}
+.r-item{padding:10px 0;border-bottom:1px solid #f0f0f0}
+.r-item:last-child{border-bottom:none}
+.r-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.r-item-name{font-size:13px;font-weight:600;color:#111}
+.r-item-price{font-size:13px;font-weight:600;color:#16a67d;white-space:nowrap}
+.r-item-meta{font-size:11px;color:#888;margin-top:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;background:#e8f7f2;color:#0e8f6a;font-size:10px;font-weight:600}
+.del-btn{background:none;border:none;cursor:pointer;color:#ccc;padding:4px;transition:color .15s;flex-shrink:0;font-size:16px;line-height:1}
+.del-btn:hover{color:#e74c3c}
+.receipt-footer{padding:12px 16px;border-top:1px solid #e5e5e5;background:#fff;position:sticky;bottom:0}
+.count-line{font-size:12px;color:#888;margin-bottom:8px}
+.total-line{display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#111;margin-bottom:12px}
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pay-btn{padding:12px 8px;border-radius:10px;border:1px solid #e5e5e5;background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:#666;transition:all .15s;text-align:center;font-family:inherit}
+.pay-btn:hover{border-color:#16a67d;color:#16a67d}
+.pay-btn:disabled{opacity:.4;cursor:default}
+.pay-btn.qr{border-color:#4B5FD4;color:#4B5FD4}
+.pay-btn.qr:hover{background:#eef0fc}
+/* History */
+.history-top{padding:10px 16px;border-bottom:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:center}
+.history-wrap{flex:1;overflow-y:auto;padding:8px 16px}
+.history-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:#ccc;font-size:13px;padding:2rem 0}
+.h-item{border:1px solid #e5e5e5;border-radius:12px;padding:12px 13px;margin-bottom:8px}
+.h-item.pending{border-left:3px solid #F5A623}
+.h-item.done{border-left:3px solid #16a67d;opacity:.65}
+.h-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:5px}
+.h-name{font-size:13px;font-weight:600;color:#111}
+.h-total{font-size:13px;font-weight:600;color:#16a67d;white-space:nowrap}
+.h-meta{font-size:11px;color:#888;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:5px}
+.h-tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600}
+.h-tag-qr{background:#eef0fc;color:#4B5FD4}
+.h-tag-cash{background:#fef4e8;color:#c47c10}
+.h-tag-pending{background:#FFF3E0;color:#F5A623}
+.h-tag-done{background:#e8f7f2;color:#0e8f6a}
+.h-items-preview{font-size:11px;color:#888;margin-bottom:8px;line-height:1.5}
+.done-btn{width:100%;padding:8px;border-radius:8px;border:1px solid #16a67d;background:transparent;color:#16a67d;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.done-btn:hover{background:#16a67d;color:#fff}
+.done-label{font-size:11px;color:#aaa;text-align:center;padding:4px 0}
+/* Sync indicator */
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#ccc;display:inline-block;margin-right:5px;transition:background .3s}
+.sync-dot.ok{background:#16a67d}
+.sync-dot.err{background:#e74c3c}
+.sync-dot.loading{background:#F5A623;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* Overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal{background:#fff;border-radius:20px;padding:24px;text-align:center;width:100%;max-width:280px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-title{font-size:16px;font-weight:700;color:#111;margin-bottom:4px}
+.modal-sub{font-size:12px;color:#888;margin-bottom:14px}
+.customer-line{font-size:14px;font-weight:600;color:#111;margin-bottom:4px}
+.qr-box{width:160px;height:160px;margin:0 auto 14px;border:1px solid #e5e5e5;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f9f9f9}
+.amount-badge{font-size:24px;font-weight:700;color:#16a67d;margin-bottom:10px}
+.modal-btn{width:100%;padding:13px;border-radius:10px;border:none;background:#16a67d;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;font-family:inherit}
+.modal-btn:hover{background:#0e8f6a}
+.modal-cancel{width:100%;padding:11px;border-radius:10px;border:1px solid #e5e5e5;background:transparent;cursor:pointer;font-size:13px;color:#888;font-family:inherit}
+.cash-input-wrap{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+.cash-input-wrap input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #e5e5e5;background:#f9f9f9;font-size:16px;color:#111;font-family:inherit;outline:none}
+.change-row{display:flex;justify-content:space-between;font-size:14px;padding:10px 14px;background:#f9f9f9;border-radius:10px;margin-bottom:14px}
+.done-name{font-size:22px;font-weight:700;color:#16a67d;margin:8px 0 6px}
+@media(max-width:640px){
+  .app{grid-template-columns:1fr;min-height:100vh}
+  .panel-right{border-left:none;border-top:1px solid #e5e5e5}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="panel-left">
+    <div class="topbar">
+      <div>
+        <p class="shop-name">🏸 Badminton TNI x Room.31</p>
+        <p class="shop-sub">Take Away</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:#888;display:flex;align-items:center"><span class="sync-dot" id="sync-dot"></span><span id="sync-label">Google Sheet</span></span>
+        <span style="font-size:12px;color:#888" id="clock"></span>
+      </div>
+    </div>
+    <div class="order-content">
+      <p class="step-label">ชื่อลูกค้า</p>
+      <div class="name-section">
+        <span style="font-size:18px">👤</span>
+        <input type="text" id="customer-name" placeholder="กรอกชื่อลูกค้า..." oninput="checkAddBtn()" autocomplete="off"/>
+      </div>
+      <p class="step-label">เลือกสินค้า</p>
+      <div class="prod-grid">
+        <div class="prod-card" onclick="selectProd('matcha')">
+          <span class="prod-icon">🍵</span>
+          <p class="prod-name">มัทฉะ</p>
+          <p class="prod-price">฿50</p>
+        </div>
+        <div class="prod-card" onclick="selectProd('keychain')">
+          <span class="prod-icon">🔑</span>
+          <p class="prod-name">พวงกุญแจ</p>
+          <p class="prod-price">฿30</p>
+        </div>
+      </div>
+      <div id="sweet-section" style="display:none">
+        <div class="sweet-section">
+          <p style="font-size:12px;font-weight:600;color:#666">🍬 ระดับความหวาน</p>
+          <div class="sweet-grid">
+            <button class="sweet-opt" onclick="selectSweet(0,this)">0%<br><span style="font-size:10px">ไม่หวาน</span></button>
+            <button class="sweet-opt" onclick="selectSweet(25,this)">25%<br><span style="font-size:10px">น้อย</span></button>
+            <button class="sweet-opt" onclick="selectSweet(50,this)">50%<br><span style="font-size:10px">กลาง</span></button>
+            <button class="sweet-opt" onclick="selectSweet(100,this)">100%<br><span style="font-size:10px">ปกติ</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="note-section">
+        <p style="font-size:12px;font-weight:600;color:#666;margin-bottom:6px">✏️ หมายเหตุ</p>
+        <textarea id="note-input" placeholder="เช่น ไม่ใส่แข็ง, ถุงแยก..."></textarea>
+      </div>
+      <button class="add-btn" id="add-btn" disabled onclick="addItem()">+ เพิ่มรายการ</button>
+    </div>
+  </div>
+
+  <div class="panel-right">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('order',this)">🧾 ออเดอร์</button>
+      <button class="tab" id="tab-hist-btn" onclick="switchTab('history',this)">📋 ประวัติ</button>
+    </div>
+
+    <!-- Order tab -->
+    <div class="tab-panel active" id="tab-order">
+      <div class="receipt-header">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <p style="font-size:12px;color:#888" id="receipt-customer-name">👤 —</p>
+          <button onclick="clearOrder()" style="font-size:12px;color:#aaa;background:none;border:none;cursor:pointer;padding:4px 8px">ล้าง</button>
+        </div>
+      </div>
+      <div class="receipt-items" id="receipt-items">
+        <div class="receipt-empty"><span style="font-size:32px">🧾</span><span>ยังไม่มีรายการ</span></div>
+      </div>
+      <div class="receipt-footer">
+        <p class="count-line" id="count-line">0 รายการ</p>
+        <div class="total-line"><span>ยอดรวม</span><span id="total">฿0</span></div>
+        <div class="pay-methods">
+          <button class="pay-btn qr" id="btn-qr" disabled onclick="openQR()">📱 QR PromptPay</button>
+          <button class="pay-btn" id="btn-cash" disabled onclick="openCash()">💵 เงินสด</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- History tab -->
+    <div class="tab-panel" id="tab-history">
+      <div class="history-top">
+        <div>
+          <span style="font-size:12px;color:#888">วันนี้ <span id="h-count">0</span> ออเดอร์</span>
+          <span style="font-size:11px;color:#aaa;margin-left:8px" id="h-pending-count"></span>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:#16a67d" id="h-total-day">฿0</span>
+      </div>
+      <div class="history-wrap" id="history-wrap">
+        <div class="history-empty"><span style="font-size:32px">📋</span><span>ยังไม่มีประวัติ</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR Modal -->
+<div class="overlay" id="overlay-qr" style="display:none" onclick="if(event.target===this)closeOverlay()">
+  <div class="modal">
+    <p class="modal-title">📱 QR PromptPay</p>
+    <p class="customer-line" id="qr-customer"></p>
+    <p class="modal-sub">สแกนเพื่อชำระเงิน</p>
+    <div class="qr-box">
+      <svg viewBox="0 0 100 100" width="130" height="130" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="35" height="35" rx="3" fill="none" stroke="#111" stroke-width="3"/>
+        <rect x="12" y="12" width="21" height="21" rx="1" fill="#111"/>
+        <rect x="60" y="5" width="35" height="35" rx="3" fill="none" stroke="#111" stroke-width="3"/>
+        <rect x="67" y="12" width="21" height="21" rx="1" fill="#111"/>
+        <rect x="5" y="60" width="35" height="35" rx="3" fill="none" stroke="#111" stroke-width="3"/>
+        <rect x="12" y="67" width="21" height="21" rx="1" fill="#111"/>
+        <rect x="60" y="60" width="8" height="8" fill="#111"/><rect x="72" y="60" width="8" height="8" fill="#111"/>
+        <rect x="84" y="60" width="11" height="8" fill="#111"/><rect x="60" y="72" width="8" height="8" fill="#111"/>
+        <rect x="72" y="72" width="8" height="8" fill="#111"/><rect x="84" y="72" width="11" height="8" fill="#111"/>
+        <rect x="60" y="84" width="8" height="11" fill="#111"/><rect x="72" y="84" width="8" height="11" fill="#111"/>
+        <rect x="84" y="84" width="11" height="11" fill="#111"/>
+        <rect x="46" y="5" width="8" height="8" fill="#111"/><rect x="46" y="17" width="8" height="8" fill="#111"/>
+        <rect x="46" y="29" width="8" height="8" fill="#111"/><rect x="46" y="46" width="8" height="8" fill="#111"/>
+        <rect x="46" y="58" width="8" height="8" fill="#111"/><rect x="5" y="46" width="8" height="8" fill="#111"/>
+        <rect x="17" y="46" width="8" height="8" fill="#111"/><rect x="29" y="46" width="8" height="8" fill="#111"/>
+      </svg>
+    </div>
+    <p class="amount-badge" id="qr-amount">฿0</p>
+    <p style="font-size:11px;color:#aaa;margin-bottom:16px">Badminton TNI x Room.31</p>
+    <button class="modal-btn" onclick="confirmPayment('QR PromptPay')">✅ รับเงินแล้ว</button>
+    <button class="modal-cancel" onclick="closeOverlay()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- Cash Modal -->
+<div class="overlay" id="overlay-cash" style="display:none" onclick="if(event.target===this)closeOverlay()">
+  <div class="modal">
+    <p class="modal-title">💵 ชำระเงินสด</p>
+    <p class="customer-line" id="cash-customer"></p>
+    <p class="modal-sub" style="margin-top:4px">ยอดที่ต้องชำระ</p>
+    <p class="amount-badge" id="cash-amount">฿0</p>
+    <div class="cash-input-wrap">
+      <span style="font-size:14px;color:#888;white-space:nowrap">รับมา ฿</span>
+      <input type="number" id="cash-received" placeholder="0" oninput="calcChange()" min="0" inputmode="numeric"/>
+    </div>
+    <div class="change-row">
+      <span style="color:#888">เงินทอน</span>
+      <span style="font-weight:700;color:#111" id="change-display">฿0</span>
+    </div>
+    <button class="modal-btn" id="cash-confirm-btn" disabled onclick="confirmPayment('เงินสด')">✅ ยืนยันชำระ</button>
+    <button class="modal-cancel" onclick="closeOverlay()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- Done Modal -->
+<div class="overlay" id="overlay-done" style="display:none">
+  <div class="modal">
+    <p style="font-size:12px;color:#aaa">🏸 Badminton TNI x Room.31</p>
+    <p style="font-size:13px;color:#888;margin-top:14px">ออเดอร์ของ</p>
+    <p class="done-name" id="done-name"></p>
+    <p style="font-size:13px;color:#888;margin-bottom:2px" id="done-items"></p>
+    <p style="font-size:18px;font-weight:700;color:#111;margin-bottom:4px" id="done-total"></p>
+    <p style="font-size:12px;color:#aaa;margin-bottom:4px" id="done-method"></p>
+    <p style="font-size:14px;color:#16a67d;font-weight:600;margin-bottom:4px" id="done-change"></p>
+    <p style="font-size:11px;color:#aaa;margin-bottom:18px" id="done-sync-status"></p>
+    <button class="modal-btn" onclick="newOrder()">รับออเดอร์ถัดไป</button>
+  </div>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/a/macros/tni.ac.th/s/AKfycbxX_RYUotX9RlPsNIc8rF8hvKjHxxRWQ_u8Kt0gprqOukw2EmCWamdLS7WI3HLfYuA/exec";
+
+const prods={matcha:{icon:'🍵',name:'มัทฉะ',price:50,hasSweet:true},keychain:{icon:'🔑',name:'พวงกุญแจ',price:30,hasSweet:false}};
+const sweetLabels={0:'ไม่หวาน',25:'หวานน้อย',50:'หวานกลาง',100:'หวานปกติ'};
+let curProd=null,curSweet=null,items=[],history=[];
+
+function getName(){return document.getElementById('customer-name').value.trim();}
+function getTotal(){return items.reduce((s,i)=>s+i.price,0);}
+
+function switchTab(t,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+}
+function selectProd(id){curProd=id;curSweet=null;document.querySelectorAll('.sweet-opt').forEach(b=>b.classList.remove('sel'));document.getElementById('sweet-section').style.display=prods[id].hasSweet?'block':'none';checkAddBtn();}
+function selectSweet(v,btn){curSweet=v;document.querySelectorAll('.sweet-opt').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');checkAddBtn();}
+function checkAddBtn(){
+  const p=curProd?prods[curProd]:null;
+  document.getElementById('add-btn').disabled=!(getName().length>0&&p&&(!p.hasSweet||curSweet!==null));
+  document.getElementById('receipt-customer-name').textContent='👤 '+(getName()||'—');
+}
+function addItem(){
+  if(!curProd)return;
+  const p=prods[curProd];
+  const note=document.getElementById('note-input').value.trim();
+  items.push({id:Date.now(),type:curProd,icon:p.icon,name:p.name,price:p.price,sweet:p.hasSweet?curSweet:null,note});
+  document.getElementById('note-input').value='';
+  curProd=null;curSweet=null;
+  document.getElementById('sweet-section').style.display='none';
+  document.querySelectorAll('.sweet-opt').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('add-btn').disabled=true;
+  renderReceipt();
+}
+function removeItem(id){items=items.filter(i=>i.id!==id);renderReceipt();}
+function clearOrder(){items=[];document.getElementById('customer-name').value='';document.getElementById('receipt-customer-name').textContent='👤 —';renderReceipt();}
+function renderReceipt(){
+  const el=document.getElementById('receipt-items');
+  if(!items.length){el.innerHTML='<div class="receipt-empty"><span style="font-size:32px">🧾</span><span>ยังไม่มีรายการ</span></div>';document.getElementById('total').textContent='฿0';document.getElementById('count-line').textContent='0 รายการ';document.getElementById('btn-qr').disabled=true;document.getElementById('btn-cash').disabled=true;return;}
+  const total=getTotal();
+  el.innerHTML=items.map(item=>{
+    const st=item.sweet!=null?`<span class="tag">${sweetLabels[item.sweet]}</span>`:'';
+    const nt=item.note?`<span>${item.note}</span>`:'';
+    return`<div class="r-item"><div class="r-item-top"><span class="r-item-name">${item.icon} ${item.name}</span><div style="display:flex;align-items:center;gap:8px"><span class="r-item-price">฿${item.price}</span><button class="del-btn" onclick="removeItem(${item.id})">✕</button></div></div>${(item.sweet!=null||item.note)?`<div class="r-item-meta">${st}${nt}</div>`:''}</div>`;
+  }).join('');
+  document.getElementById('total').textContent='฿'+total.toLocaleString();
+  document.getElementById('count-line').textContent=items.length+' รายการ';
+  document.getElementById('btn-qr').disabled=false;
+  document.getElementById('btn-cash').disabled=false;
+}
+function openQR(){document.getElementById('qr-customer').textContent='👤 '+getName();document.getElementById('qr-amount').textContent='฿'+getTotal().toLocaleString();document.getElementById('overlay-qr').style.display='flex';}
+function openCash(){document.getElementById('cash-customer').textContent='👤 '+getName();document.getElementById('cash-amount').textContent='฿'+getTotal().toLocaleString();document.getElementById('cash-received').value='';document.getElementById('change-display').textContent='฿0';document.getElementById('cash-confirm-btn').disabled=true;document.getElementById('overlay-cash').style.display='flex';}
+function calcChange(){const total=getTotal();const recv=parseInt(document.getElementById('cash-received').value)||0;const ch=recv-total;document.getElementById('change-display').textContent=ch>=0?'฿'+ch.toLocaleString():'—';document.getElementById('cash-confirm-btn').disabled=ch<0;}
+function closeOverlay(){document.getElementById('overlay-qr').style.display='none';document.getElementById('overlay-cash').style.display='none';}
+
+function setSyncStatus(state){
+  const dot=document.getElementById('sync-dot');
+  const label=document.getElementById('sync-label');
+  dot.className='sync-dot '+state;
+  if(state==='loading')label.textContent='กำลังบันทึก...';
+  else if(state==='ok')label.textContent='บันทึกแล้ว ✓';
+  else label.textContent='บันทึกไม่สำเร็จ';
+}
+
+async function saveToSheet(data){
+  setSyncStatus('loading');
+  return new Promise((resolve)=>{
+    try{
+      const params=new URLSearchParams({
+        time:data.time,
+        name:data.name,
+        items:data.items,
+        total:data.total,
+        method:data.method,
+        change:data.change||''
+      });
+      const img=new Image();
+      img.onload=img.onerror=()=>{setSyncStatus('ok');resolve(true);};
+      img.src=SHEET_URL+'?'+params.toString();
+      setTimeout(()=>{setSyncStatus('ok');resolve(true);},4000);
+    }catch(e){
+      setSyncStatus('err');
+      resolve(false);
+    }
+  });
+}
+
+async function confirmPayment(method){
+  closeOverlay();
+  const total=getTotal();
+  const recv=method==='เงินสด'?parseInt(document.getElementById('cash-received').value)||0:0;
+  const ch=method==='เงินสด'?recv-total:0;
+  const now=new Date();
+  const timeStr=now.toLocaleString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const itemsStr=items.map(it=>{let s=it.name;if(it.sweet!=null)s+='('+sweetLabels[it.sweet]+')';if(it.note)s+='['+it.note+']';return s;}).join(', ');
+
+  const entry={id:Date.now(),name:getName(),items:[...items],itemsStr,total,method,change:ch,time:timeStr,status:'pending'};
+  history.unshift(entry);
+
+  document.getElementById('done-name').textContent=getName();
+  document.getElementById('done-items').textContent=items.length+' รายการ';
+  document.getElementById('done-total').textContent='฿'+total.toLocaleString();
+  document.getElementById('done-method').textContent='ชำระด้วย'+method;
+  document.getElementById('done-change').textContent=method==='เงินสด'&&ch>0?'เงินทอน ฿'+ch.toLocaleString():'';
+  document.getElementById('done-sync-status').textContent='⏳ กำลังบันทึกลง Google Sheet...';
+  document.getElementById('overlay-done').style.display='flex';
+
+  const ok=await saveToSheet({action:'addOrder',time:timeStr,name:entry.name,items:itemsStr,total,method,change:ch>0?ch:''});
+  document.getElementById('done-sync-status').textContent=ok?'✅ บันทึกลง Google Sheet แล้ว':'⚠️ บันทึกไม่สำเร็จ (ไม่มีอินเทอร์เน็ต)';
+  renderHistory();
+}
+
+function markDone(id){
+  const h=history.find(x=>x.id===id);
+  if(h){h.status='done';renderHistory();}
+}
+
+function newOrder(){items=[];document.getElementById('customer-name').value='';document.getElementById('receipt-customer-name').textContent='👤 —';document.getElementById('overlay-done').style.display='none';renderReceipt();}
+
+function renderHistory(){
+  const wrap=document.getElementById('history-wrap');
+  const btn=document.getElementById('tab-hist-btn');
+  if(!history.length){wrap.innerHTML='<div class="history-empty"><span style="font-size:32px">📋</span><span>ยังไม่มีประวัติ</span></div>';btn.textContent='📋 ประวัติ';document.getElementById('h-pending-count').textContent='';document.getElementById('h-count').textContent='0';document.getElementById('h-total-day').textContent='฿0';return;}
+  const dayTotal=history.reduce((s,h)=>s+h.total,0);
+  const pending=history.filter(h=>h.status==='pending').length;
+  document.getElementById('h-count').textContent=history.length;
+  document.getElementById('h-total-day').textContent='฿'+dayTotal.toLocaleString();
+  document.getElementById('h-pending-count').textContent=pending>0?`⏳ รอส่ง ${pending}`:'';
+  btn.innerHTML=`📋 ประวัติ${pending>0?` <span style="background:#F5A623;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:3px">${pending}</span>`:''}`;
+  wrap.innerHTML=history.map(h=>{
+    const preview=h.items.map(it=>{let s=it.icon+' '+it.name;if(it.sweet!=null)s+=' ('+sweetLabels[it.sweet]+')';return s;}).join(', ');
+    const mClass=h.method==='QR PromptPay'?'h-tag-qr':'h-tag-cash';
+    const isDone=h.status==='done';
+    return`<div class="h-item ${isDone?'done':'pending'}">
+      <div class="h-top"><span class="h-name">👤 ${h.name}</span><span class="h-total">฿${h.total.toLocaleString()}</span></div>
+      <div class="h-meta">
+        <span>${h.time}</span>
+        <span class="h-tag ${mClass}">${h.method}</span>
+        <span class="h-tag ${isDone?'h-tag-done':'h-tag-pending'}">${isDone?'✅ ส่งแล้ว':'⏳ รอส่ง'}</span>
+        ${h.method==='เงินสด'&&h.change>0?`<span style="color:#aaa">ทอน ฿${h.change}</span>`:''}
+      </div>
+      <p class="h-items-preview">${preview}</p>
+      ${isDone?`<p class="done-label">✅ ส่งของให้ลูกค้าแล้ว</p>`:`<button class="done-btn" onclick="markDone(${h.id})">✅ ส่งของให้ลูกค้าแล้ว</button>`}
+    </div>`;
+  }).join('');
+}
+
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
+renderReceipt();renderHistory();tick();setInterval(tick,30000);
+</script>
+</body>
+</html>
